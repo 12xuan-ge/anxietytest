@@ -1,0 +1,1377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>焦虑情绪自测</title>
+<style>
+  :root {
+    --bg: #f2f8f6;
+    --card: #ffffff;
+    --text: #1f2933;
+    --muted: #7b8794;
+    --primary: #2c7a7b;
+    --primary-dark: #225c5d;
+    --primary-soft: #e3f4f1;
+    --border: #e4ebea;
+    --green: #38a169;
+    --yellow: #d69e2e;
+    --orange: #dd6b20;
+    --red: #e53e3e;
+    --shadow: 0 10px 40px rgba(34, 92, 93, .10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  body::before, body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::before {
+    width: 460px; height: 460px;
+    background: radial-gradient(circle, rgba(56, 178, 172, .16), transparent 70%);
+    top: -140px; right: -120px;
+  }
+  body::after {
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(214, 158, 46, .10), transparent 70%);
+    bottom: -120px; left: -100px;
+  }
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 580px;
+    margin: 24px auto 48px;
+    background: var(--card);
+    border-radius: 24px;
+    padding: 30px 26px 34px;
+    box-shadow: var(--shadow);
+    animation: fadeIn .35s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #38b2ac, #2c7a7b);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(44, 122, 123, .28);
+    transition: transform .05s, box-shadow .15s, filter .15s;
+  }
+  .btn:hover { filter: brightness(1.05); }
+  .btn:active { transform: scale(.98); }
+  .btn-ghost {
+    background: #fff;
+    color: var(--muted);
+    border: 1.5px solid var(--border);
+    box-shadow: none;
+    font-weight: 500;
+  }
+  .btn-ghost:hover { background: #f7faf9; color: var(--text); filter: none; }
+  .btn:disabled { background: #cbd5e0; box-shadow: none; cursor: not-allowed; }
+
+  /* ---------- 开始页 ---------- */
+  .hero {
+    background: linear-gradient(135deg, #2f8f8e, #225c5d);
+    border-radius: 18px;
+    padding: 28px 22px 24px;
+    text-align: center;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .hero h1 { font-size: 25px; letter-spacing: 1px; }
+  .hero p { font-size: 13px; opacity: .85; margin-top: 6px; }
+  .info-row { display: flex; gap: 10px; margin-bottom: 20px; }
+  .info-chip {
+    flex: 1;
+    background: var(--primary-soft);
+    border-radius: 12px;
+    padding: 10px 6px;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--primary-dark);
+  }
+  .info-chip b { display: block; font-size: 17px; }
+  .guide {
+    background: #f8fbfa;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 15px 17px;
+    font-size: 14px;
+    color: #4a5568;
+    margin-bottom: 22px;
+  }
+  .disclaimer {
+    margin-top: 18px;
+    font-size: 11.5px;
+    color: #a0aec0;
+    text-align: center;
+    line-height: 1.8;
+  }
+
+  /* ---------- 答题页 ---------- */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .progress-row b { color: var(--primary-dark); font-size: 15px; }
+  .progress-track {
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4fd1c5, #2c7a7b);
+    border-radius: 4px;
+    transition: width .3s ease;
+  }
+  .q-tag {
+    display: inline-block;
+    background: var(--primary-soft);
+    color: var(--primary-dark);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+  .quiz-question { font-size: 19px; font-weight: 600; margin-bottom: 22px; min-height: 2.6em; }
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 13px 15px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color .12s, background .12s, transform .06s;
+  }
+  .option:hover { border-color: #b2d4d0; transform: translateY(-1px); }
+  .option-letter {
+    flex-shrink: 0;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #f1f5f4;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .12s;
+  }
+  .option.selected {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    font-weight: 600;
+  }
+  .option.selected .option-letter {
+    background: var(--primary);
+    color: #fff;
+  }
+  .quiz-nav { margin-top: 18px; }
+  .quiz-nav .btn { width: auto; padding: 11px 26px; font-size: 14px; }
+
+  /* ---------- 结果页：解锁前 ---------- */
+  .done-icon {
+    width: 72px; height: 72px;
+    margin: 8px auto 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #48bb78, #2f855a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(72, 187, 120, .35);
+  }
+  .done-icon svg { width: 34px; height: 34px; }
+  .done-title { text-align: center; font-size: 21px; color: var(--primary-dark); margin-bottom: 6px; }
+  .done-sub { text-align: center; font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+  .done-list {
+    list-style: none;
+    background: #f8fbfa;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .done-list li {
+    font-size: 14.5px;
+    color: #4a5568;
+    padding: 6px 0 6px 26px;
+    position: relative;
+  }
+  .done-list li::before {
+    content: "";
+    position: absolute;
+    left: 4px; top: 13px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #4fd1c5;
+  }
+  .locked-card {
+    border: 1.5px dashed #cbd5e0;
+    border-radius: 16px;
+    padding: 24px 18px;
+    text-align: center;
+    background: #fbfdfc;
+  }
+  .lock-icon { margin-bottom: 10px; }
+  .lock-icon svg { width: 30px; height: 30px; }
+  .locked-card h3 { font-size: 16.5px; margin-bottom: 6px; }
+  .locked-card p { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+  .code-input {
+    width: 100%;
+    max-width: 230px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    font-size: 19px;
+    text-align: center;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    font-family: "SF Mono", Consolas, Menlo, monospace;
+    margin-bottom: 14px;
+  }
+  .code-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(44,122,123,.12); }
+  .locked-card .btn { max-width: 230px; margin: 0 auto; }
+  .unlock-msg { font-size: 13px; margin-top: 12px; min-height: 1.2em; }
+  .unlock-msg.error { color: var(--red); }
+  .unlock-msg.ok { color: var(--green); }
+
+  /* ---------- 结果页：解锁后（华丽报告） ---------- */
+  .report-doc {
+    text-align: left;
+    background:
+      radial-gradient(circle at 0% 0%, rgba(79, 209, 197, .07), transparent 45%),
+      radial-gradient(circle at 100% 30%, rgba(214, 158, 46, .06), transparent 45%),
+      #fdfefe;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px 20px 24px;
+  }
+  .report-head {
+    background: linear-gradient(135deg, #2f8f8e, #225c5d);
+    border-radius: 16px;
+    padding: 26px 20px 22px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .report-head::before, .report-head::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .08);
+  }
+  .report-head::before { width: 130px; height: 130px; top: -50px; left: -40px; }
+  .report-head::after { width: 90px; height: 90px; bottom: -35px; right: -25px; }
+  .report-head h1 {
+    font-size: 22px;
+    letter-spacing: 3px;
+    position: relative;
+  }
+  .report-head .head-line {
+    width: 46px; height: 3px;
+    background: rgba(255, 255, 255, .7);
+    border-radius: 2px;
+    margin: 10px auto 0;
+    position: relative;
+  }
+  .report-meta {
+    font-size: 11.5px;
+    color: rgba(255, 255, 255, .8);
+    margin-top: 10px;
+    position: relative;
+  }
+  .score-wrap { text-align: center; margin-bottom: 12px; }
+  .score-ring {
+    --pct: 0;
+    --lvl-color: var(--green);
+    width: 172px; height: 172px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background: conic-gradient(var(--lvl-color) calc(var(--pct) * 1%), #edf2f0 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 0 0 10px rgba(44, 122, 123, .05), 0 0 0 22px rgba(44, 122, 123, .03);
+  }
+  .score-ring::before {
+    content: "";
+    position: absolute;
+    inset: 15px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, .05);
+  }
+  .score-ring-inner { position: relative; text-align: center; }
+  .score-ring-num { font-size: 45px; font-weight: 800; line-height: 1; color: var(--text); }
+  .score-ring-num small { font-size: 15px; font-weight: 600; color: var(--muted); }
+  .score-ring-label { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 2px; }
+  .level-badge {
+    display: inline-block;
+    padding: 8px 26px;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-top: 14px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .15);
+  }
+  .level-tech { text-align: center; font-size: 12.5px; color: var(--muted); margin-top: 8px; }
+  .scale { position: relative; margin: 26px 2px 6px; }
+  .scale-segments { display: flex; height: 10px; border-radius: 5px; overflow: hidden; }
+  .scale-segments span { flex: 1; }
+  .scale-marker {
+    position: absolute;
+    top: -7px;
+    width: 0; height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 9px solid var(--text);
+    transform: translateX(-50%);
+    transition: left .5s ease;
+  }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+  .grad-line {
+    height: 2px;
+    border: none;
+    background: linear-gradient(90deg, transparent, #9adbd5, transparent);
+    margin: 26px 6px;
+  }
+  .report-section {
+    margin-bottom: 16px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 18px 14px;
+    box-shadow: 0 4px 14px rgba(34, 92, 93, .05);
+  }
+  .report-section h2 {
+    font-size: 15.5px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .report-section h2::before {
+    content: "";
+    width: 4px; height: 16px;
+    background: linear-gradient(180deg, #4fd1c5, #2c7a7b);
+    border-radius: 2px;
+  }
+  .report-section p { font-size: 14.5px; color: #3d4a57; margin-bottom: 12px; }
+  .report-section li { font-size: 14.5px; color: #3d4a57; margin-bottom: 9px; }
+  .report-section ul { padding-left: 22px; margin-bottom: 6px; }
+  .report-section li::marker { color: #38b2ac; }
+  .advice-group { margin-bottom: 14px; }
+  .advice-group:last-child { margin-bottom: 4px; }
+  .advice-group h3 {
+    font-size: 13.5px;
+    color: var(--primary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .advice-group h3::before {
+    content: "";
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #4fd1c5;
+    flex-shrink: 0;
+  }
+
+  /* 维度分析 */
+  .dim-row { margin-bottom: 18px; }
+  .dim-row:last-child { margin-bottom: 4px; }
+  .dim-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .dim-name { font-size: 14px; font-weight: 700; color: var(--text); }
+  .dim-stat { font-size: 12.5px; font-weight: 600; }
+  .dim-track {
+    height: 10px;
+    background: #eef2f1;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  .dim-fill {
+    height: 100%;
+    border-radius: 5px;
+    width: 0;
+    transition: width .8s cubic-bezier(.22, .8, .35, 1);
+  }
+  .dim-text { font-size: 13.5px; color: #4a5568; line-height: 1.75; margin: 0; }
+
+  .report-note {
+    background: linear-gradient(135deg, #fdf6e9, #fdf2dc);
+    border: 1px solid #f0dfae;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 13.5px;
+    color: #7a5a12;
+    margin: 18px 0;
+  }
+  .closing-box {
+    background: linear-gradient(135deg, #eef7f5, #e8f4f1);
+    border: 1px solid #cfe8e3;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin: 18px 0;
+    position: relative;
+  }
+  .closing-box p { font-size: 13.5px; color: #31564f; margin: 0; line-height: 1.9; }
+  .closing-box::before {
+    content: "寄语";
+    position: absolute;
+    top: -11px;
+    left: 16px;
+    background: linear-gradient(135deg, #2f8f8e, #225c5d);
+    color: #fff;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 2px 12px;
+    border-radius: 999px;
+  }
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 6px;
+  }
+  .report-table th, .report-table td {
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+    text-align: left;
+  }
+  .report-table th { background: #eef4f2; font-weight: 600; color: var(--primary-dark); }
+  .report-table tr:nth-child(even) td { background: #fbfdfc; }
+  .stamp-wrap { text-align: center; margin-top: 20px; }
+  .stamp {
+    display: inline-block;
+    border: 2px solid #c53030;
+    color: #c53030;
+    border-radius: 8px;
+    padding: 5px 16px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    font-size: 13px;
+    transform: rotate(-6deg);
+    opacity: .7;
+  }
+  .report-close {
+    margin-top: 16px;
+    font-size: 12.5px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.9;
+  }
+  .result-actions { margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .unlocked-tip { text-align: center; font-size: 12px; color: var(--green); margin-top: 8px; }
+
+  /* ---------- 管理面板 ---------- */
+  #admin-panel {
+    position: relative;
+    z-index: 1;
+    max-width: 580px;
+    margin: 20px auto;
+    background: #fffbeb;
+    border: 1px solid #f6e05e;
+    border-radius: 18px;
+    padding: 20px 22px;
+  }
+  #admin-panel h2 { font-size: 16px; color: #744210; margin-bottom: 10px; }
+  #admin-panel table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  #admin-panel th, #admin-panel td { border: 1px solid #e9d8a6; padding: 6px 10px; text-align: left; }
+  #admin-panel .mono { font-family: "SF Mono", Consolas, Menlo, monospace; letter-spacing: 2px; font-weight: 700; }
+  #admin-panel p { font-size: 12px; color: #744210; margin-top: 10px; }
+
+  /* ---------- 打印区 ---------- */
+  #print-area { display: none; }
+  @media print {
+    body { background: #fff; }
+    body > *:not(#print-area) { display: none !important; }
+    #print-area { display: block !important; padding: 24px; }
+    .p-head {
+      text-align: center;
+      border: 2px solid #000;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+    .p-head h1 { font-size: 24px; color: #000; letter-spacing: 4px; }
+    .p-meta { font-size: 12px; color: #555; margin-top: 6px; }
+    .p-score {
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      border: 1.5px solid #999;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+    }
+    .p-section h2 { font-size: 15px; margin: 16px 0 8px; border-bottom: 1px solid #999; padding-bottom: 4px; }
+    .p-section p, .p-section li { font-size: 13px; color: #000; margin-bottom: 6px; }
+    .p-section ul { padding-left: 18px; }
+    .p-dim { margin-bottom: 10px; }
+    .p-dim-head { font-size: 12.5px; font-weight: 700; margin-bottom: 2px; }
+    .p-dim-bar { height: 8px; border: 1px solid #999; border-radius: 4px; overflow: hidden; margin-bottom: 3px; }
+    .p-dim-fill { height: 100%; background: #888; }
+    .p-dim-text { font-size: 11.5px; color: #222; }
+    .p-advice-group { margin-bottom: 8px; }
+    .p-advice-group h3 { font-size: 13px; margin-bottom: 3px; }
+    .p-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .p-table th, .p-table td { border: 1px solid #999; padding: 5px 8px; text-align: left; }
+    .p-note { font-size: 11px; color: #333; background: #f2f2f2; border-radius: 6px; padding: 8px 10px; margin-top: 12px; }
+    .p-closing { font-size: 12px; color: #000; border: 1px solid #999; border-radius: 6px; padding: 10px 12px; margin-top: 14px; }
+    .p-footer { font-size: 10px; color: #666; margin-top: 24px; border-top: 1px solid #ccc; padding-top: 8px; line-height: 1.8; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 开始页 -->
+<section id="page-start" class="page">
+  <div class="hero">
+    <h1>焦虑情绪自测</h1>
+    <p>25 道题 · 七大维度了解你近期的情绪状态</p>
+  </div>
+  <div class="info-row">
+    <div class="info-chip"><b>25</b>道题目</div>
+    <div class="info-chip"><b>3 分钟</b>左右完成</div>
+    <div class="info-chip"><b>本地</b>计算 · 不上传</div>
+  </div>
+  <div class="guide">
+    请回想<b>最近两周</b>里你的真实感受，选择最符合的一项。答案没有对错之分，凭第一感觉作答即可。你的作答仅在本地设备上计算，不会上传任何数据。
+  </div>
+  <button class="btn" id="btn-start">开始测试</button>
+  <p class="disclaimer">
+    本测试题目参考 GAD-7 等公开通用量表的评估维度改编，仅供自我了解与参考，<br>不构成任何医疗诊断或治疗建议。
+  </p>
+</section>
+
+<!-- 答题页 -->
+<section id="page-quiz" class="page" hidden>
+  <div class="progress-row">
+    <span>答题进度</span>
+    <b id="quiz-progress-text">1 / 25</b>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  <span class="q-tag" id="q-tag">Q1</span>
+  <h2 class="quiz-question" id="quiz-question"></h2>
+  <div id="quiz-options"></div>
+  <div class="quiz-nav">
+    <button class="btn btn-ghost" id="btn-prev" hidden>上一题</button>
+  </div>
+</section>
+
+<!-- 结果页 -->
+<section id="page-result" class="page" hidden>
+
+  <!-- 解锁前：不显示分数与等级 -->
+  <div id="result-locked-view">
+    <div class="done-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <h2 class="done-title">测试完成，报告已生成</h2>
+    <p class="done-sub">你的专属报告包含以下内容</p>
+    <ul class="done-list">
+      <li>你的专属得分与状态分析</li>
+      <li>七大维度的详细解读</li>
+      <li>为你定制的调整建议</li>
+      <li>25 道题的作答明细</li>
+    </ul>
+    <div class="locked-card">
+      <div class="lock-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#a0aec0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+      </div>
+      <h3>解锁完整报告</h3>
+      <p>解锁码由你购买测试的平台提供</p>
+      <input class="code-input" id="code-input" placeholder="输入解锁码" maxlength="6" autocomplete="off">
+      <button class="btn" id="btn-unlock">解锁完整报告</button>
+      <p class="unlock-msg" id="unlock-msg"></p>
+    </div>
+  </div>
+
+  <!-- 解锁后：完整报告 -->
+  <div id="result-full-view" hidden>
+    <div class="report-doc">
+      <div class="report-head">
+        <h1>焦虑自测报告</h1>
+        <div class="head-line"></div>
+        <p class="report-meta" id="report-meta"></p>
+      </div>
+
+      <div class="score-wrap">
+        <div class="score-ring" id="score-ring">
+          <div class="score-ring-inner">
+            <div class="score-ring-num" id="score-num">0<small>/ 100</small></div>
+            <div class="score-ring-label">综合得分</div>
+          </div>
+        </div>
+        <span class="level-badge" id="level-badge"></span>
+        <p class="level-tech" id="level-tech"></p>
+      </div>
+      <div class="scale">
+        <div class="scale-segments" id="scale-segments"></div>
+        <div class="scale-marker" id="scale-marker" style="left:0%"></div>
+      </div>
+      <div class="scale-labels">
+        <span>0 平稳</span><span>20 轻微</span><span>43 明显</span><span>67 较大</span><span>100</span>
+      </div>
+
+      <hr class="grad-line">
+
+      <div class="report-section">
+        <h2>报告导读</h2>
+        <p id="report-intro"></p>
+      </div>
+
+      <div class="report-section">
+        <h2>七大维度分析</h2>
+        <div id="dim-list"></div>
+      </div>
+
+      <div class="report-section">
+        <h2>给你的建议</h2>
+        <div id="report-suggestions"></div>
+      </div>
+
+      <div class="report-note" id="report-note" hidden></div>
+
+      <div class="closing-box">
+        <p id="report-closing"></p>
+      </div>
+
+      <div class="report-section">
+        <h2>答题明细</h2>
+        <table class="report-table">
+          <thead><tr><th>题目</th><th>你的选择</th><th style="width:60px">得分</th></tr></thead>
+          <tbody id="report-answers"></tbody>
+        </table>
+      </div>
+
+      <div class="stamp-wrap"><span class="stamp">仅供自我参考</span></div>
+      <p class="report-close">
+        情绪波动是人之常情，焦虑本身并不可怕，重要的是我们如何与它相处。<br>
+        本报告由系统自动生成，<b>仅供参考</b>，不构成任何医疗诊断或治疗建议。如有持续困扰，请寻求专业帮助。
+      </p>
+    </div>
+    <div class="result-actions">
+      <button class="btn" id="btn-print">保存 / 打印报告</button>
+      <button class="btn btn-ghost" id="btn-restart">重新测试</button>
+    </div>
+    <p class="unlocked-tip" id="unlocked-tip"></p>
+  </div>
+</section>
+
+<!-- 卖家管理面板（通过 ?admin=1 访问） -->
+<section id="admin-panel" hidden>
+  <h2>解锁码管理（仅卖家可见）</h2>
+  <table>
+    <thead><tr><th>日期</th><th>解锁码</th></tr></thead>
+    <tbody id="admin-codes"></tbody>
+  </table>
+  <p>顾客拍下后，将链接与当天解锁码发给对方即可（可直接发送带码链接自动解锁）。</p>
+</section>
+
+<!-- 打印专用区 -->
+<div id="print-area"></div>
+
+<script>
+"use strict";
+
+/* ==================== 题库（参考公开量表维度改编） ==================== */
+
+/* 每题 4 档作答，满分不同：核心症状 5 分，常见症状 4 分，相关表现 3 分。
+   全选最高档恰好 100 分。dim 为该题所属维度。 */
+const QUESTIONS = [
+  { id: 1,  maxScore: 5, dim: "emotion",   text: "回想最近两周，你感到紧张、不安或心里发慌的时候多吗？" },
+  { id: 2,  maxScore: 5, dim: "emotion",   text: "有些事情明知道担心也没用，但还是控制不住地反复去想" },
+  { id: 3,  maxScore: 5, dim: "emotion",   text: "总觉得有什么不好的事情要发生，心里七上八下" },
+  { id: 4,  maxScore: 5, dim: "life",      text: "焦虑或担心的情绪已经影响到你的工作、学习或日常生活" },
+  { id: 5,  maxScore: 5, dim: "sleep",     text: "因为心里有事，晚上翻来覆去难以入睡，或睡得不踏实" },
+  { id: 6,  maxScore: 5, dim: "emotion",   text: "即使在休息的时候，也很难让大脑真正放松下来" },
+  { id: 7,  maxScore: 4, dim: "body",      text: "没做剧烈运动，也会突然心慌、心跳加速" },
+  { id: 8,  maxScore: 4, dim: "body",      text: "感到胸闷、气短，或呼吸不顺畅" },
+  { id: 9,  maxScore: 4, dim: "body",      text: "手心出汗、手抖，或感觉身体轻飘飘的" },
+  { id: 10, maxScore: 4, dim: "body",      text: "一紧张就胃不舒服、没胃口或闹肚子" },
+  { id: 11, maxScore: 4, dim: "body",      text: "肩颈、后背肌肉紧绷酸痛，怎么放松都放不下来" },
+  { id: 12, maxScore: 4, dim: "body",      text: "感到头晕、乏力，或头重脚轻" },
+  { id: 13, maxScore: 4, dim: "cognition", text: "看书、工作时注意力难以集中，容易走神" },
+  { id: 14, maxScore: 4, dim: "cognition", text: "记性变差，刚想做的事转头就忘" },
+  { id: 15, maxScore: 4, dim: "behavior",  text: "变得容易烦躁，一点小事就想发火" },
+  { id: 16, maxScore: 4, dim: "behavior",  text: "坐不住、站不住，总想走来走去或抖腿" },
+  { id: 17, maxScore: 4, dim: "behavior",  text: "因为担心，回避某些场合或事情（如聚会、发言、出门）" },
+  { id: 18, maxScore: 4, dim: "behavior",  text: "反复检查、确认一些事情才能安心（如门窗、消息、身体状况）" },
+  { id: 19, maxScore: 4, dim: "cognition", text: "遇到一点小事，就会不由自主地往最坏的方向想" },
+  { id: 20, maxScore: 3, dim: "life",      text: "因为怕做不好，迟迟不愿开始做某件事" },
+  { id: 21, maxScore: 3, dim: "social",    text: "在人多或陌生的场合感到不自在" },
+  { id: 22, maxScore: 3, dim: "social",    text: "很在意别人的眼光，担心自己表现得不够好" },
+  { id: 23, maxScore: 3, dim: "life",      text: "对以前感兴趣的事情，现在提不起劲" },
+  { id: 24, maxScore: 3, dim: "sleep",     text: "睡眠质量不好，容易早醒或多梦" },
+  { id: 25, maxScore: 3, dim: "life",      text: "即使睡够了，白天也容易觉得累、提不起精神" }
+];
+
+const OPTIONS = [
+  { label: "完全没有" },
+  { label: "偶尔（有几天）" },
+  { label: "经常（一半以上的日子）" },
+  { label: "几乎每天" }
+];
+
+/* 各满分题对应的四档得分 */
+const SCORE_MAPS = {
+  5: [0, 2, 3, 5],
+  4: [0, 1, 3, 4],
+  3: [0, 1, 2, 3]
+};
+const MAX_TOTAL = 100;
+
+/* 七大维度与三档解读文案 */
+const DIMENSIONS = [
+  {
+    id: "emotion", name: "情绪感受",
+    low:  "这一维度得分较低，说明你近期内心比较安定，很少感到紧张不安，也没有控制不住的担忧，这是很好的状态。",
+    mid:  "这一维度出现一些波动，你可能时不时会感到紧张或担忧，尤其是在压力比较大的时候，这属于很常见的状态，不必过分在意。",
+    high: "这一维度的波动比较明显，你近期可能常常感到紧张、担忧，甚至有时会有「不好的事要发生」的感觉。别担心，这恰恰说明该给自己松松绑了，后文的建议会对你有帮助。"
+  },
+  {
+    id: "life", name: "生活影响",
+    low:  "情绪几乎没有影响你的工作、学习和日常生活，你的生活节奏保持得不错。",
+    mid:  "情绪已经开始在一定程度上影响你的效率或精力，比如容易拖延、提不起劲，注意给自己留一些缓冲空间。",
+    high: "情绪对日常生活的影响比较明显，工作学习的效率、精力状态可能都受到了拖累。请优先安排时间照顾自己，休息不是偷懒，是充电。"
+  },
+  {
+    id: "sleep", name: "睡眠质量",
+    low:  "你的睡眠整体不错，很少因为心事睡不着，这是非常好的状态基础，请继续保持。",
+    mid:  "你的睡眠偶尔会受到情绪影响，比如入睡变慢、多梦或早醒，睡前减少看手机的时间会有所帮助。",
+    high: "睡眠受情绪影响比较明显，入睡困难、睡不踏实或早醒可能经常发生。把睡眠调整好，是恢复状态的第一步，后文建议会提供具体方法。"
+  },
+  {
+    id: "body", name: "身体反应",
+    low:  "身体没有出现明显的紧张反应，说明你的身心都处在比较放松的状态。",
+    mid:  "身体偶尔会发出一些紧张信号，比如心慌、胃不舒服或肌肉紧绷，这是压力下的正常生理反应，放松训练能有效缓解。",
+    high: "身体给出的紧张信号比较明显（如心慌、胸闷、肠胃不适、肌肉紧绷等），说明身体在替你承受不少压力，需要留意休息和放松。"
+  },
+  {
+    id: "cognition", name: "认知表现",
+    low:  "你的注意力和记忆力状态不错，思维也比较平和。",
+    mid:  "注意力偶尔难以集中，有时也会不自觉地往坏处想，这是大脑在压力下常见的反应。",
+    high: "注意力和记忆力受到比较明显的影响，且容易陷入「最坏打算」的思维循环。这并不代表你的能力有问题，而是情绪消耗了太多精力。"
+  },
+  {
+    id: "behavior", name: "情绪与行为",
+    low:  "你的情绪比较稳定，行为上也少有烦躁、回避等表现。",
+    mid:  "有时会感到烦躁、坐不住，或想回避一些让自己紧张的场合，这些表现会随着状态改善而减少。",
+    high: "烦躁、坐立不安或回避行为比较明显，这些都是压力之下很常见的反应，不必因此自责，它们只是提醒你需要休息的信号。"
+  },
+  {
+    id: "social", name: "社交状态",
+    low:  "你在社交场合比较自在，不太会因为别人的眼光而紧张。",
+    mid:  "在人多或陌生的场合偶尔会不自在，担心自己表现得不够好，其实大多数人并不会注意到那些小细节。",
+    high: "社交场合让你比较紧张，容易担心别人的看法。请记住：大多数人其实更关注自己，很少会盯着你的小失误。"
+  }
+];
+
+const DIM_STAT = {
+  low:  { label: "平稳",     color: "#48bb78" },
+  mid:  { label: "有些波动", color: "#ecc94b" },
+  high: { label: "波动明显", color: "#ed8936" }
+};
+
+const LEVELS = [
+  {
+    min: 0, max: 19, name: "状态平稳", tech: "无明显焦虑水平", color: "#38a169",
+    intro: "你的状态整体平稳。最近这段时间，焦虑情绪几乎没有对你的生活造成困扰，说明你目前拥有不错的心态调节能力，这是很值得保持的状态。生活中偶尔出现的紧张是正常的保护反应，无需为此担心。下面从七个维度为你展开具体分析。",
+    advice: {
+      daily: [
+        "保持当前的生活节奏与运动习惯，好的状态值得持续经营",
+        "继续保持规律作息，让身体记住这份安稳的节奏"
+      ],
+      mind: [
+        "偶有紧张时，做几次缓慢的深呼吸就能很快平静下来",
+        "可以尝试把正念练习融入日常，让心态更从容"
+      ],
+      support: [
+        "继续维护与亲友的联系，良好的人际支持是心态平稳的底气"
+      ]
+    },
+    adviceNote: ""
+  },
+  {
+    min: 20, max: 42, name: "轻微波动", tech: "通常所说的轻度水平", color: "#d69e2e",
+    intro: "你的得分提示近期情绪有些轻微的波动。这种波动在压力较大的时期非常常见，很多人都会经历，通常不会对生活造成明显影响，也大多能通过简单的自我调节很快恢复，不必过分担心。下面从七个维度为你展开具体分析，看看波动主要出现在哪里。",
+    advice: {
+      daily: [
+        "保持规律作息，睡前 1 小时把手机放远一点",
+        "每周 3 次、每次 30 分钟左右的运动，是性价比最高的「情绪调节剂」",
+        "白天多晒晒太阳、多走动，有助于夜间睡眠和情绪稳定"
+      ],
+      mind: [
+        "每天留 5-10 分钟做几次深呼吸或正念练习",
+        "把烦心事写下来，分成「能解决的」和「控制不了的」，只对前者采取行动"
+      ],
+      support: [
+        "找信任的人聊一聊，很多时候说出来的那一刻，焦虑就轻了一半"
+      ]
+    },
+    adviceNote: "如果这种状态持续超过一个月，或逐渐加重，请留意自己的情绪变化，必要时可以寻求专业帮助。"
+  },
+  {
+    min: 43, max: 66, name: "明显波动", tech: "通常所说的中度水平", color: "#dd6b20",
+    intro: "你的得分提示近期的情绪波动比较明显，可能已经开始悄悄影响你的睡眠、效率或与人相处。需要说明的是，这绝不代表你有什么「问题」，它更像一个善意的提醒——你最近承受的压力可能超过了负荷，身体和情绪在提醒你该照顾自己了。好消息是，这种状态通过科学的调整和专业帮助，完全可以显著改善。下面从七个维度为你展开具体分析。",
+    advice: {
+      daily: [
+        "坚持每周 3-5 次有氧运动，这是被反复验证最有效的缓解方式之一",
+        "固定作息时间，把睡眠环境调整得更舒适",
+        "睡前少刷手机，减少负面信息的输入"
+      ],
+      mind: [
+        "给自己设一个「担忧时间」，其他时候想到烦心事就告诉自己留到那时再想",
+        "减少咖啡因和酒精，它们会悄悄加重焦虑",
+        "试着用纸笔记录每天的情绪变化，看见它、命名它，本身就是一种疗愈"
+      ],
+      support: [
+        "考虑和专业的心理咨询师聊一聊，一次坦诚的谈话往往带来意想不到的轻松",
+        "把近期的感受告诉一位你信任的家人或朋友"
+      ]
+    },
+    adviceNote: "如果方便的话，建议与专业心理咨询师或医生沟通一次。主动求助是非常成熟和有力量的选择，很多人在专业帮助下都很快找回了轻松的状态。"
+  },
+  {
+    min: 67, max: 100, name: "较大波动", tech: "通常所说的重度水平", color: "#e53e3e",
+    intro: "你的得分提示最近的情绪波动比较大，身体可能已经出现了一些信号（比如心慌、失眠、疲惫等）。请别因此紧张——把这份报告看作一个善意的提醒：你最近可能太累了，需要认真地关照一下自己。焦虑带来的困扰是非常常见的，也是完全可以治疗和康复的，很多人在专业帮助下都恢复了轻松自在的状态。下面从七个维度为你展开具体分析。",
+    advice: {
+      daily: [
+        "保持最基本的作息与饮食规律，先照顾好身体",
+        "暂时给自己减减负，允许自己慢下来，休息不是偷懒",
+        "远离酒精等「临时麻醉」的方式，它们只会让情况变得更糟"
+      ],
+      mind: [
+        "把你的感受写下来或说给信任的人听，别一个人扛着",
+        "每天给自己安排一件小事：散步、听音乐、晒太阳都可以"
+      ],
+      support: [
+        "尽快安排一次专业咨询：医院精神科/心理科或专业心理咨询机构都可以",
+        "把你的感受告诉家人或信任的朋友，让他们成为你的支持"
+      ]
+    },
+    adviceNote: "寻求专业帮助不是软弱，而是对自己负责。若你出现伤害自己的念头，请立即拨打全国 24 小时心理援助热线 12356，或联系身边可信任的人。"
+  }
+];
+
+const CLOSING = "最后，想对你说：无论这份报告的结果如何，都请把它当作了解自己的一扇窗，而不是评判自己的标尺。情绪像天气，有晴有雨都很正常，重要的是你愿意看见它、照顾它。记得给自己一些耐心和温柔——你值得被好好对待。";
+
+/* 卖家可调开关：改为 true 则需解锁码才能看完整报告 */
+const REQUIRE_UNLOCK = true;
+
+const CODE_SEED = "anxiety-report-2026";
+const CODE_CHARS = "23456789ABCDEFGHJKMNPQRSTUVWXYZ";
+const UNLOCK_KEY = "anx_unlock_v1";
+
+/* ==================== 纯函数 ==================== */
+
+/* answers: 每题所选项的档位索引 0-3 */
+function calcScore(answers) {
+  var sum = 0;
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var idx = answers[i];
+    sum += idx == null ? 0 : SCORE_MAPS[QUESTIONS[i].maxScore][idx];
+  }
+  return sum;
+}
+
+function levelForScore(score) {
+  for (var i = 0; i < LEVELS.length; i++) {
+    if (score >= LEVELS[i].min && score <= LEVELS[i].max) return LEVELS[i];
+  }
+  return LEVELS[LEVELS.length - 1];
+}
+
+/* 各维度得分 */
+function dimScores(answers) {
+  return DIMENSIONS.map(function (d) {
+    var got = 0, max = 0;
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      if (QUESTIONS[i].dim === d.id) {
+        max += QUESTIONS[i].maxScore;
+        got += SCORE_MAPS[QUESTIONS[i].maxScore][answers[i]];
+      }
+    }
+    return { dim: d, got: got, max: max, ratio: max === 0 ? 0 : got / max };
+  });
+}
+
+function dimLevelOf(ratio) {
+  return ratio < 0.34 ? "low" : ratio < 0.67 ? "mid" : "high";
+}
+
+function pad2(n) { return String(n).padStart(2, "0"); }
+
+function dateYMD(date) {
+  return date.getFullYear() + pad2(date.getMonth() + 1) + pad2(date.getDate());
+}
+
+function hashCode(str) {
+  var h = 5381;
+  for (var i = 0; i < str.length; i++) {
+    h = ((h * 33) ^ str.charCodeAt(i)) >>> 0;
+  }
+  return h >>> 0;
+}
+
+function codeForDate(date) {
+  var h = hashCode(CODE_SEED + dateYMD(date));
+  var code = "";
+  for (var i = 0; i < 6; i++) {
+    code += CODE_CHARS[h % CODE_CHARS.length];
+    h = (h * 31 + 7) >>> 0;
+  }
+  return code;
+}
+
+/* 接受昨天、今天、明天三天的码，避免跨日误伤 */
+function validCodes() {
+  var now = new Date();
+  var list = [];
+  for (var d = -1; d <= 1; d++) {
+    var dt = new Date(now);
+    dt.setDate(now.getDate() + d);
+    list.push(codeForDate(dt));
+  }
+  return list;
+}
+
+function isValidCode(input) {
+  if (!input) return false;
+  var up = String(input).trim().toUpperCase();
+  return validCodes().indexOf(up) !== -1;
+}
+
+function reportId() {
+  var chars = "0123456789ABCDEFGHJKLMNPQRSTUVWXYZ";
+  var tail = "";
+  for (var i = 0; i < 4; i++) {
+    tail += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return "R-" + dateYMD(new Date()) + "-" + tail;
+}
+
+function buildReportHTML(score, level, answers, meta) {
+  var dims = dimScores(answers);
+
+  var dimHtml = "";
+  dims.forEach(function (ds) {
+    var lv = dimLevelOf(ds.ratio);
+    var stat = DIM_STAT[lv];
+    var pct = Math.round(ds.ratio * 100);
+    dimHtml +=
+      "<div class=\"p-dim\">" +
+      "<div class=\"p-dim-head\">" + ds.dim.name + "：" + ds.got + " / " + ds.max + "（" + stat.label + "）</div>" +
+      "<div class=\"p-dim-bar\"><div class=\"p-dim-fill\" style=\"width:" + pct + "%\"></div></div>" +
+      "<div class=\"p-dim-text\">" + ds.dim[lv] + "</div>" +
+      "</div>";
+  });
+
+  var advHtml = "";
+  var groups = [["daily", "日常调整"], ["mind", "心态练习"], ["support", "寻求支持"]];
+  groups.forEach(function (g) {
+    if (!level.advice[g[0]].length) return;
+    advHtml += "<div class=\"p-advice-group\"><h3>· " + g[1] + "</h3><ul>";
+    level.advice[g[0]].forEach(function (s) { advHtml += "<li>" + s + "</li>"; });
+    advHtml += "</ul></div>";
+  });
+
+  var ansRows = "";
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var idx = answers[i];
+    var pts = SCORE_MAPS[QUESTIONS[i].maxScore][idx];
+    ansRows += "<tr><td>" + (i + 1) + ". " + QUESTIONS[i].text + "</td><td>" +
+      OPTIONS[idx].label + "</td><td>" + pts + "</td></tr>";
+  }
+
+  var noteHtml = level.adviceNote
+    ? "<div class=\"p-note\"><b>温馨提示：</b>" + level.adviceNote + "</div>"
+    : "";
+
+  return "" +
+    "<div class=\"p-head\">" +
+    "<h1>焦虑自测报告</h1>" +
+    "<p class=\"p-meta\">报告编号 " + meta.id + " ｜ 生成时间 " + meta.time + "</p>" +
+    "</div>" +
+    "<div class=\"p-score\">综合得分 " + score + " / 100 ｜ 状态评估：" + level.name + "（" + level.tech + "）</div>" +
+    "<div class=\"p-section\"><h2>报告导读</h2><p>" + level.intro + "</p></div>" +
+    "<div class=\"p-section\"><h2>七大维度分析</h2>" + dimHtml + "</div>" +
+    "<div class=\"p-section\"><h2>给你的建议</h2>" + advHtml + "</div>" +
+    noteHtml +
+    "<div class=\"p-closing\"><b>寄语：</b>" + CLOSING + "</div>" +
+    "<div class=\"p-section\"><h2>答题明细</h2>" +
+    "<table class=\"p-table\"><thead><tr><th>题目</th><th>你的选择</th><th>得分</th></tr></thead><tbody>" +
+    ansRows + "</tbody></table></div>" +
+    "<p class=\"p-footer\">情绪波动是人之常情，焦虑本身并不可怕，重要的是我们如何与它相处。" +
+    "本报告由系统自动生成，仅供参考，不构成任何医疗诊断或治疗建议。如有持续困扰，请寻求专业帮助（全国 24 小时心理援助热线：12356）。" +
+    "<br>题目参考 GAD-7 等公开通用量表的评估维度改编；量表出处：Spitzer RL, Kroenke K, Williams JBW, et al. A brief measure for assessing generalized anxiety disorder: the GAD-7. Arch Intern Med. 2006;166(10):1092-1097.</p>";
+}
+
+/* ==================== 页面逻辑（仅浏览器执行） ==================== */
+
+if (typeof document !== "undefined") {
+(function () {
+
+  var state = { answers: new Array(QUESTIONS.length).fill(null), current: 0 };
+
+  function $(id) { return document.getElementById(id); }
+
+  function showPage(id) {
+    var pages = ["page-start", "page-quiz", "page-result"];
+    for (var i = 0; i < pages.length; i++) {
+      $(pages[i]).hidden = pages[i] !== id;
+    }
+    window.scrollTo(0, 0);
+  }
+
+  function isUnlocked() {
+    if (!REQUIRE_UNLOCK) return true;
+    try { return localStorage.getItem(UNLOCK_KEY) === "1"; } catch (e) { return false; }
+  }
+
+  function setUnlocked() {
+    try { localStorage.setItem(UNLOCK_KEY, "1"); } catch (e) {}
+  }
+
+  /* ---------- 答题 ---------- */
+
+  function renderQuestion() {
+    var q = QUESTIONS[state.current];
+    $("quiz-progress-text").textContent = (state.current + 1) + " / " + QUESTIONS.length;
+    $("q-tag").textContent = "Q" + q.id;
+    $("quiz-question").textContent = q.text;
+    $("progress-fill").style.width = ((state.current + 1) / QUESTIONS.length * 100) + "%";
+    $("btn-prev").hidden = state.current === 0;
+
+    var box = $("quiz-options");
+    box.innerHTML = "";
+    OPTIONS.forEach(function (opt, idx) {
+      var btn = document.createElement("button");
+      btn.className = "option" + (state.answers[state.current] === idx ? " selected" : "");
+      var letter = document.createElement("span");
+      letter.className = "option-letter";
+      letter.textContent = "ABCD"[idx];
+      btn.appendChild(letter);
+      btn.appendChild(document.createTextNode(opt.label));
+      btn.addEventListener("click", function () { onSelect(idx); });
+      box.appendChild(btn);
+    });
+  }
+
+  function onSelect(idx) {
+    state.answers[state.current] = idx;
+    renderQuestion();
+    setTimeout(function () {
+      if (state.current < QUESTIONS.length - 1) {
+        state.current++;
+        renderQuestion();
+      } else if (state.answers.every(function (a) { return a != null; })) {
+        showResult();
+      }
+    }, 250);
+  }
+
+  $("btn-prev").addEventListener("click", function () {
+    if (state.current > 0) {
+      state.current--;
+      renderQuestion();
+    }
+  });
+
+  /* ---------- 结果页 ---------- */
+
+  function showResult() {
+    $("result-locked-view").hidden = false;
+    $("result-full-view").hidden = true;
+    $("code-input").value = "";
+    $("unlock-msg").textContent = "";
+    if (isUnlocked()) {
+      fillReport();
+    }
+    showPage("page-result");
+  }
+
+  function fillReport() {
+    var score = calcScore(state.answers);
+    var level = levelForScore(score);
+
+    $("result-locked-view").hidden = true;
+    $("result-full-view").hidden = false;
+
+    $("report-meta").textContent =
+      "报告编号 " + reportId() + " ｜ 生成时间 " +
+      new Date().toLocaleString("zh-CN", { hour12: false });
+
+    $("score-ring").style.setProperty("--pct", score / MAX_TOTAL * 100);
+    $("score-ring").style.setProperty("--lvl-color", level.color);
+    $("score-num").innerHTML = score + "<small>/ " + MAX_TOTAL + "</small>";
+
+    var badge = $("level-badge");
+    badge.textContent = level.name;
+    badge.style.background = level.color;
+    $("level-tech").textContent = "对应" + level.tech;
+
+    var seg = $("scale-segments");
+    seg.innerHTML = "";
+    LEVELS.forEach(function (lv) {
+      var s = document.createElement("span");
+      s.style.background = lv.color;
+      seg.appendChild(s);
+    });
+    $("scale-marker").style.left = Math.min(100, score / MAX_TOTAL * 100) + "%";
+
+    $("report-intro").textContent = level.intro;
+    $("report-closing").textContent = CLOSING;
+
+    /* 维度分析 */
+    var dimBox = $("dim-list");
+    dimBox.innerHTML = "";
+    dimScores(state.answers).forEach(function (ds) {
+      var lv = dimLevelOf(ds.ratio);
+      var stat = DIM_STAT[lv];
+      var pct = Math.round(ds.ratio * 100);
+
+      var row = document.createElement("div");
+      row.className = "dim-row";
+
+      var head = document.createElement("div");
+      head.className = "dim-head";
+      var name = document.createElement("span");
+      name.className = "dim-name";
+      name.textContent = ds.dim.name;
+      var st = document.createElement("span");
+      st.className = "dim-stat";
+      st.style.color = stat.color;
+      st.textContent = ds.got + " / " + ds.max + " · " + stat.label;
+      head.appendChild(name);
+      head.appendChild(st);
+
+      var track = document.createElement("div");
+      track.className = "dim-track";
+      var fill = document.createElement("div");
+      fill.className = "dim-fill";
+      fill.style.background = "linear-gradient(90deg, " + stat.color + ", " + stat.color + "cc)";
+      track.appendChild(fill);
+
+      var text = document.createElement("p");
+      text.className = "dim-text";
+      text.textContent = ds.dim[lv];
+
+      row.appendChild(head);
+      row.appendChild(track);
+      row.appendChild(text);
+      dimBox.appendChild(row);
+
+      /* 入场动画：先 0 后目标宽度 */
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () { fill.style.width = pct + "%"; });
+      });
+    });
+
+    /* 建议（分三类） */
+    var advBox = $("report-suggestions");
+    advBox.innerHTML = "";
+    var groups = [["daily", "日常调整"], ["mind", "心态练习"], ["support", "寻求支持"]];
+    groups.forEach(function (g) {
+      if (!level.advice[g[0]].length) return;
+      var wrap = document.createElement("div");
+      wrap.className = "advice-group";
+      var h3 = document.createElement("h3");
+      h3.textContent = g[1];
+      wrap.appendChild(h3);
+      var ul = document.createElement("ul");
+      level.advice[g[0]].forEach(function (s) {
+        var li = document.createElement("li");
+        li.textContent = s;
+        ul.appendChild(li);
+      });
+      wrap.appendChild(ul);
+      advBox.appendChild(wrap);
+    });
+
+    var note = $("report-note");
+    if (level.adviceNote) {
+      note.hidden = false;
+      note.textContent = "温馨提示：" + level.adviceNote;
+    } else {
+      note.hidden = true;
+    }
+
+    var tbody = $("report-answers");
+    tbody.innerHTML = "";
+    QUESTIONS.forEach(function (q, i) {
+      var idx = state.answers[i];
+      var pts = SCORE_MAPS[q.maxScore][idx];
+      var tr = document.createElement("tr");
+      var td1 = document.createElement("td");
+      td1.textContent = (i + 1) + ". " + q.text;
+      var td2 = document.createElement("td");
+      td2.textContent = OPTIONS[idx].label;
+      var td3 = document.createElement("td");
+      td3.textContent = pts;
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(td3);
+      tbody.appendChild(tr);
+    });
+
+    $("unlocked-tip").textContent = "报告已解锁，可保存或打印";
+  }
+
+  /* ---------- 解锁 ---------- */
+
+  function tryUnlock() {
+    var input = $("code-input").value;
+    var msg = $("unlock-msg");
+    if (isValidCode(input)) {
+      setUnlocked();
+      fillReport();
+      msg.textContent = "";
+    } else {
+      msg.textContent = "解锁码不正确，请核对后重试";
+      msg.className = "unlock-msg error";
+    }
+  }
+
+  $("btn-unlock").addEventListener("click", tryUnlock);
+  $("code-input").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") tryUnlock();
+  });
+
+  /* ---------- 打印 ---------- */
+
+  $("btn-print").addEventListener("click", function () {
+    var score = calcScore(state.answers);
+    var level = levelForScore(score);
+    var meta = {
+      id: reportId(),
+      time: new Date().toLocaleString("zh-CN", { hour12: false })
+    };
+    $("print-area").innerHTML = buildReportHTML(score, level, state.answers, meta);
+    window.print();
+  });
+
+  /* ---------- 流程 ---------- */
+
+  $("btn-start").addEventListener("click", function () {
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    state.current = 0;
+    renderQuestion();
+    showPage("page-quiz");
+  });
+
+  $("btn-restart").addEventListener("click", function () {
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    state.current = 0;
+    renderQuestion();
+    showPage("page-quiz");
+  });
+
+  /* ---------- URL 参数：?code=XXX 自动解锁；?admin=1 卖家面板 ---------- */
+
+  function initFromURL() {
+    var params = new URLSearchParams(window.location.search);
+    if (params.get("admin") === "1") {
+      renderAdmin();
+      $("admin-panel").hidden = false;
+    }
+    var code = params.get("code");
+    if (code) {
+      if (isValidCode(code)) {
+        setUnlocked();
+        var tip = document.createElement("p");
+        tip.className = "unlocked-tip";
+        tip.textContent = "解锁成功，完成测试后即可查看完整报告";
+        $("page-start").insertBefore(tip, $("page-start").querySelector(".disclaimer"));
+      } else if (REQUIRE_UNLOCK) {
+        alert("解锁码无效或已过期，请联系卖家获取新的解锁码");
+      }
+    }
+  }
+
+  function renderAdmin() {
+    var tbody = $("admin-codes");
+    tbody.innerHTML = "";
+    for (var d = -1; d <= 6; d++) {
+      var dt = new Date();
+      dt.setDate(dt.getDate() + d);
+      var label = dt.getFullYear() + "-" + pad2(dt.getMonth() + 1) + "-" + pad2(dt.getDate());
+      if (d === 0) label += "（今天）";
+      else if (d === -1) label += "（昨天）";
+      var tr = document.createElement("tr");
+      var td1 = document.createElement("td");
+      td1.textContent = label;
+      var td2 = document.createElement("td");
+      td2.className = "mono";
+      td2.textContent = codeForDate(dt);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tbody.appendChild(tr);
+    }
+  }
+
+  initFromURL();
+})();
+}
+</script>
+</body>
+</html>
