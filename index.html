@@ -983,11 +983,11 @@ function codeForDate(date) {
   return code;
 }
 
-/* 接受昨天、今天、明天三天的码，避免跨日误伤 */
+/* 接受前后各 6 天的码（共 13 天窗口），卖家每周更新一次即可 */
 function validCodes() {
   var now = new Date();
   var list = [];
-  for (var d = -1; d <= 1; d++) {
+  for (var d = -6; d <= 6; d++) {
     var dt = new Date(now);
     dt.setDate(now.getDate() + d);
     list.push(codeForDate(dt));
